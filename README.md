@@ -14,5 +14,4 @@
 ![GitHub Logo](https://habrastorage.org/web/359/13b/db5/35913bdb599249b1ae3416ca333a4df0.png)
 
 
-![GitHub Logo](https://habrastorage.org/web/3ac/2de/4d4/3ac2de4d46514ca1adde147dc17962f3.png)
 
