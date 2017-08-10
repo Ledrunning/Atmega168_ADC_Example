@@ -1,4 +1,4 @@
-#Multichannel ADC source based on Atmega 168#
+# Multichannel ADC source based on Atmega 168
 
 * In this project I used Atmel AVR microcontroller Atmega 168 and
 16 x 2 LCD based on HD44780;
