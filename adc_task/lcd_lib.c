@@ -15,8 +15,8 @@ const uint8_t lcd_customchar[] PROGMEM=//define 6 custom LCD chars
 0b11111,0b11111,0b11111,0b11111,0b11111,0b11111,0b11111,0b0, // 5. 5/5 full progress block
 };
 
-//*****************************************************************************
-void lcd_dat(uint8_t ch)		//Sends Char to LCD
+//Sends Char to LCD
+void lcd_dat(uint8_t ch)		
 {
 	LDP=(ch&0b11110000);
 	LCP|=1<<LCD_RS;
@@ -33,8 +33,8 @@ void lcd_dat(uint8_t ch)		//Sends Char to LCD
 	LCP&=~(1<<LCD_RS);
 	_delay_ms(1);
 }
-//*****************************************************************************
-void lcd_com(uint8_t cmd)	//Sends Command to LCD
+//Sends Command to LCD
+void lcd_com(uint8_t cmd)	
 {
 	LDP=(cmd&0b11110000);
 	LCP|=1<<LCD_E;		
@@ -48,15 +48,15 @@ void lcd_com(uint8_t cmd)	//Sends Command to LCD
 	_delay_ms(1);
 
 }
-//*****************************************************************************
-void lcd_init(void)//Инициализация дисплея
+// LCD initialization
+void lcd_init(void)
 {
 	_delay_ms(15);
 	LDP=0x00;
 	LCP=0x00;
 	LDDR|=1<<LCD_D7|1<<LCD_D6|1<<LCD_D5|1<<LCD_D4;
 	LCDR|=1<<LCD_E|1<<LCD_RW|1<<LCD_RS;
-   //---------one------
+        //---------one------
 	LDP=0<<LCD_D7|0<<LCD_D6|1<<LCD_D5|1<<LCD_D4; //4 bit mode
 	LCP|=1<<LCD_E|0<<LCD_RW|0<<LCD_RS;		
 	_delay_ms(1);
@@ -74,9 +74,9 @@ void lcd_init(void)//Инициализация дисплея
 	_delay_ms(1);
 	LCP&=~(1<<LCD_E);
 	_delay_ms(1);
-	//--------4 бит 2 строки---------------
+	//-------four-------------
 	lcd_com(0x28);
-   //-----increment address, invisible cursor shift------
+        //-----increment address, invisible cursor shift------
 	lcd_com(0x0C);
 	
     //init 8 custom chars
@@ -87,20 +87,23 @@ void lcd_init(void)//Инициализация дисплея
 		ch=ch+8;
 	}
 }			
-//*****************************************************************************
-void lcd_clr(void)				// Очистить дисплей
+
+//LCD clear
+void lcd_clr(void)				
 {
 	lcd_com(1<<LCD_CLR);
 }
-//****************************************************************************
-void lcd_home(void)			//LCD cursor home
+
+//LCD cursor home
+void lcd_home(void)			
 {
 	lcd_com(1<<LCD_HOME);
 }
-//*****************************************************************************
-void lcd_string(uint8_t* data, uint8_t nBytes)	// Вывод строки на дисплей
+
+//Put string to LCD
+void lcd_string(uint8_t* data, uint8_t nBytes)	
 {
-register uint8_t i;
+        register uint8_t i;
 	// check to make sure we have a good pointer
 	if (!data) return;
 	// print data
@@ -109,8 +112,9 @@ register uint8_t i;
 		lcd_dat(data[i]);
 	}
 }
-//*****************************************************************************
-void lcd_gotoxy(uint8_t x, uint8_t y)	// Переместить курсор в позицию XY
+
+//XY Position for LCD
+void lcd_gotoxy(uint8_t x, uint8_t y)	
 {
 	register uint8_t DDRAMAddr;
 	// remap lines into proper order
@@ -125,8 +129,7 @@ void lcd_gotoxy(uint8_t x, uint8_t y)	// Переместить курсор в позицию XY
 	// set data address
 	lcd_com(1<<LCD_DDRAM | DDRAMAddr);
 }
-//*****************************************************************************
-//Вывод строки из памяти в позицию XY
+
 void copy_string_to_lcd(const uint8_t *FlashLoc, uint8_t x, uint8_t y)
 {
 	uint8_t i;
@@ -136,8 +139,7 @@ void copy_string_to_lcd(const uint8_t *FlashLoc, uint8_t x, uint8_t y)
 		lcd_dat((uint8_t)pgm_read_byte(&FlashLoc[i]));
 	}
 }
-//*****************************************************************************
-// создание собственного символа
+
 void lcd_definechar(const uint8_t *pc,uint8_t char_code)
 {
 	uint8_t a, pcc;
@@ -149,7 +151,7 @@ void lcd_definechar(const uint8_t *pc,uint8_t char_code)
 		lcd_dat(pcc);
 		}
 }
-//*****************************************************************************
+
 void lcd_shift_left(uint8_t n)	//Scrol n of characters Right
 {
 	for (uint8_t i=0;i<n;i++)
@@ -157,7 +159,7 @@ void lcd_shift_left(uint8_t n)	//Scrol n of characters Right
 		lcd_com(0x1E);
 	}
 }
-//*****************************************************************************
+
 void lcd_shift_right(uint8_t n)	//Scrol n of characters Left
 {
 	for (uint8_t i=0;i<n;i++)
@@ -165,51 +167,53 @@ void lcd_shift_right(uint8_t n)	//Scrol n of characters Left
 		lcd_com(0x18);
 	}
 }
-//*****************************************************************************
+
 void lcd_cursor_on(void) //displays LCD cursor
 {
 	lcd_com(0x0E);
 }
-//*****************************************************************************
+
 void lcd_cursor_blink(void)	//displays LCD blinking cursor
 {
 	lcd_com(0x0F);
 }
-//*****************************************************************************
+
 void lcd_cursor_off(void)	//turns OFF cursor
 {
 	lcd_com(0x0C);
 }
-//*****************************************************************************
+
 void lcd_blank(void)		//blanks LCD
 {
 	lcd_com(0x08);
 }
-//*****************************************************************************
+
 void lcd_visible(void)		//Shows LCD
 {
 	lcd_com(0x0C);
 }
-//*****************************************************************************
-void lcd_cursor_left(uint8_t n)	//Moves cursor by n poisitions left
+
+//Moves cursor by n poisitions left
+void lcd_cursor_left(uint8_t n)	
 {
 	for (uint8_t i=0;i<n;i++)
 	{
 		lcd_com(0x10);
 	}
 }
-//*****************************************************************************
-void lcd_cursor_right(uint8_t n)	//Moves cursor by n poisitions left
+
+//Moves cursor by n poisitions left
+void lcd_cursor_right(uint8_t n)	
 {
 	for (uint8_t i=0;i<n;i++)
 	{
 		lcd_com(0x14);
 	}
 }
-//*****************************************************************************
+
 //adapted fro mAVRLIB
 void lcd_progress_bar(uint8_t progress, uint8_t maxprogress, uint8_t length)
-{                       //уровень шкалы, max уровень шкалы,длина шкалы
+{                       //ГіГ°Г®ГўГҐГ­Гј ГёГЄГ Г«Г», max ГіГ°Г®ГўГҐГ­Гј ГёГЄГ Г«Г»,Г¤Г«ГЁГ­Г  ГёГЄГ Г«Г»
 	uint8_t i;
 	uint16_t pixelprogress;
 	uint8_t c;
@@ -235,7 +239,7 @@ void lcd_progress_bar(uint8_t progress, uint8_t maxprogress, uint8_t length)
 		lcd_dat(c);// write character to display
 	}
 }
-//*****************************************************************************
+
 // DISPLAY n-DIGIT INTEGER NUMER
 void lcd_num_to_str(uint16_t value, uint8_t nDigit)
 {
