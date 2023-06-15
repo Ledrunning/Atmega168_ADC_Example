@@ -88,12 +88,9 @@ void print_result(void)
 	lcd_string("Oversample ", 11);
 	lcd_gotoxy(12, 0);
 	lcd_num_to_str(adc_read(input_index), 4);
-	// For debug
 	lcd_gotoxy(0,1);
 	lcd_string("First ch ", 9);
 	lcd_gotoxy(12,1);
-	// For debug
-	//lcd_num_to_str(adc_data[0], 4);
 	sprintf(voltage, "%f", convert_to_voltage(adc_data));            
 	lcd_string(voltage, 4);                    
 }
